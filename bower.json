@@ -1,0 +1,11 @@
+{
+  "name": "dragon-offline",
+  "private": "true",
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.0.0-beta.14"
+  },
+  "dependencies": {
+    "smartgame": "neagle/smartgame",
+    "pouchdb": "~3.2.0"
+  }
+}
