@@ -19,6 +19,7 @@ angular.module('dragon-offline', ['ionic'])
     }
 
     $rootScope.dragon = "http://www.dragongoserver.net/";
+    $rootScope.uid = "8095";
 
     function getDoc(onDone, doc) {
       $http.get($rootScope.dragon + "login.php?quick_mode=1&userid=" + $username + "&passwd=" + $password).
@@ -46,7 +47,7 @@ angular.module('dragon-offline', ['ionic'])
           hash[headers[i]] = item[i];
         }
         $log.info(hash);
-        $rootScope.games.push({"white_player" : hash["white_user.id"], "black_player" : hash["black_user.id"], "next_player": hash["move_uid"]})
+        $rootScope.games.push({"white_player" : hash["white_user.id"], "black_player" : hash["black_user.id"], "display_class": hash["move_uid"] == $rootScope.uid ? "yours": "theirs" })
       }
       $log.info($rootScope.games)
       $rootScope.$digest();

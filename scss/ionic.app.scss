@@ -21,3 +21,12 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+ion-item.yours {
+	@extend .item;
+	background-color: $stable;
+}
+
+ion-item.theirs {
+	@extend .item;
+	background-color: $balanced;
+}

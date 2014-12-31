@@ -5,7 +5,7 @@
     <title>Dragon Offline</title>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
 
-    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
 
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
@@ -25,12 +25,8 @@
       </ion-header-bar>
       <ion-content>
     <ion-list>
-      <ion-item ng-repeat="game in games">
-      <player data-uid="{{game.white_player}}"></player>
-        v.s. 
-        <player data-uid="{{game.black_player}}"></player>
-        . Next move is 
-        <player data-uid="{{game.next_player}}"></player>
+      <ion-item ng-repeat="game in games" class="{{game.display_class}} item">
+        <i class="icon ion-play"></i> <player data-uid="{{game.white_player}}"></player> v.s. <player data-uid="{{game.black_player}}"></player>
       </ion-item>
     </ion-list>
       </ion-content>
