@@ -26,7 +26,11 @@
       <ion-content>
     <ion-list>
       <ion-item ng-repeat="game in games">
-        {{game.white_player}} v.s. {{game.black_player}}. Next move is {{game.next_player}}
+      <player data-uid="{{game.white_player}}"></player>
+        v.s. 
+        <player data-uid="{{game.black_player}}"></player>
+        . Next move is 
+        <player data-uid="{{game.next_player}}"></player>
       </ion-item>
     </ion-list>
       </ion-content>

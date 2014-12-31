@@ -18,13 +18,13 @@ angular.module('dragon-offline', ['ionic'])
       StatusBar.styleDefault();
     }
 
-    $dragon = "http://www.dragongoserver.net/";
+    $rootScope.dragon = "http://www.dragongoserver.net/";
 
     function getDoc(onDone, doc) {
-      $http.get($dragon + "login.php?quick_mode=1&userid=" + $username + "&passwd=" + $password).
+      $http.get($rootScope.dragon + "login.php?quick_mode=1&userid=" + $username + "&passwd=" + $password).
         success(function(data, status, headers, config) {
           $log.info(status);
-          $http.get($dragon + "quick_do.php?obj=game&cmd=list&view=running").
+          $http.get($rootScope.dragon + "quick_do.php?obj=game&cmd=list&view=running").
             success(function(data, status, headers, config) {
               data["when"] = new Date().toISOString();
               $rev = doc == null? null: doc._rev;
@@ -53,6 +53,7 @@ angular.module('dragon-offline', ['ionic'])
     }
 
     $db = new PouchDB("games");
+    $rootScope.db = $db;
     $login = $db.get("running-games", function(err, doc) {
       if (doc == null) {
         getDoc(useDoc);
@@ -66,3 +67,35 @@ angular.module('dragon-offline', ['ionic'])
     });
   });
 })
+.directive('player', function($log, $http) {
+  return {
+    templateUrl: "player.html",
+    scope: true,
+    link: function(scope, element, attrs) {
+      scope.uid = attrs.uid;
+      if (scope.username) {
+        scope.displayName = scope.username;
+      }
+      else {
+        scope.displayName = scope.uid;
+        scope.db.get("uid-" + attrs.uid, function(err, doc) {
+          if (doc == null) {
+            $http.get(scope.dragon + "quick_do.php?obj=user&cmd=info&uid=" + attrs.uid + "&fields=name").
+              success(function(data, status, headers, config) {
+                $log.info(data);
+                scope.username = data["name"];
+                scope.displayName = scope.username;
+                scope.$digest();
+                scope.db.put({"name":data["name"]}, "uid-" + attrs.uid, function (err, response) { $log.info(err); });
+              });
+          }
+          else {
+            scope.username = doc["name"];
+            scope.displayName = scope.username;
+            scope.$digest();
+          }
+        });
+      }
+    }
+  }
+});
