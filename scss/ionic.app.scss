@@ -30,3 +30,22 @@ ion-item.theirs {
 	@extend .item;
 	background-color: $stable;
 }
+
+table.goban tr {
+   border-width: 0px;
+   margin: 0px;
+   padding: 0px;
+}
+
+table.goban {
+	background-image:url(../img/wood1.gif);
+}
+
+table.goban td {
+	border-width: 0px;
+	text-align: left;
+	color: black;
+	padding: 0px;
+	line-height: 0px;
+	white-space: nowrap;
+}

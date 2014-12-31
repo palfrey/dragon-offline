@@ -1,0 +1,16 @@
+<ion-view title="{{DisplayName}}">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header">
+  	<table class="goban" cellspacing="0" cellpadding="0" border="0">
+  	<tr ng-repeat="row in rows track by $index">
+  		<td ng-repeat="cell in row track by $index">
+  			<img src="img/w.gif" ng-if="cell == 'W'" />
+  			<img src="img/b.gif" ng-if="cell == 'B'" />
+  			<img src="img/e.gif" ng-if="cell == null" />
+  		</td>
+  	</tr>
+  	</table>
+  </ion-content>
+</ion-view>

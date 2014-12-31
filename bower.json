@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "smartgame": "neagle/smartgame",
-    "pouchdb": "~3.2.0"
+    "pouchdb": "~3.2.0",
+    "underscore": "~1.7.0"
   }
 }

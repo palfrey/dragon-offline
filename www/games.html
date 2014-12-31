@@ -1,0 +1,14 @@
+<ion-view title="Games">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header">
+    <ion-list>
+      <ion-item ng-repeat="game in games" class="{{game.display_class}} item">
+        <a class="button button-small button-icon icon ion-play" href="#/app/games/{{game.id}}">
+          <player data-uid="{{game.white_player}}"></player> v.s. <player data-uid="{{game.black_player}}"></player>
+        </a>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

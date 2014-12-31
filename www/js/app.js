@@ -1,7 +1,33 @@
-angular.module('dragon-offline', ['ionic'])
-.config(['$httpProvider', function($httpProvider) {
+angular.module('dragon-offline', ['ionic', 'dragon-offline.gamecontroller'])
+.config(function($httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+  $ionicConfigProvider.views.maxCache(0);
   $httpProvider.defaults.withCredentials = true;
-}])
+  $stateProvider
+    .state('app', {
+      url: "/app",
+      abstract: true,
+      templateUrl: "menu.html",
+    })
+    .state('app.games', {
+      url: "/games",
+      views: {
+        'menuContent' :{
+          templateUrl: "games.html",
+        }
+      }
+    })
+    .state('app.game', {
+      url: "/games/:gameId",
+      views: {
+        'menuContent' :{
+          templateUrl: "game.html",
+          controller: 'GameController'
+        }
+      }
+    });
+  // if none of the above states are matched, use this as the fallback
+  $urlRouterProvider.otherwise('/app/games');
+})
 .run(function($ionicPlatform, $http, $log, $rootScope) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -42,26 +68,34 @@ angular.module('dragon-offline', ['ionic'])
           hash[headers[i]] = item[i];
         }
         $log.info(hash);
-        $rootScope.games.push({"white_player" : hash["white_user.id"], "black_player" : hash["black_user.id"], "display_class": hash["move_uid"] == $rootScope.uid ? "yours": "theirs" })
+        $rootScope.games.push({
+          "white_player" : hash["white_user.id"],
+          "black_player" : hash["black_user.id"],
+          "display_class": hash["move_uid"] == $rootScope.uid ? "yours": "theirs",
+          "id": hash["id"]
+           })
         $db.get("game-" + hash["id"], (function(hash) {return function(err, doc) {
           if (doc == null) {
-            getGame(hash["id"], hash["move_id"], null);
+            getGame(hash, null);
           }
           else {
-            $log.info(window.smartgame.parse(doc["sgf"]));
+            //$log.info(doc);
+            //$log.info(window.smartgame.parse(doc["sgf"]));
           }
         }})(hash));
       }
       $rootScope.$digest();
     }
 
-    function getGame(gid, move_id, doc) {
-      $http.get($rootScope.dragon + "sgf.php?gid=" + gid + "&quick_mode=1").
+    function getGame(hash, doc) {
+      $http.get($rootScope.dragon + "sgf.php?gid=" + hash["id"] + "&quick_mode=1").
         success(function(data, status, headers, config) {
-          $log.info(status);
-           data["move_id"] = move_id;
+           data = {"sgf" : data}
+           data["move_id"] = hash["move_id"];
+           data["white_player"] = hash["white_user.id"];
+           data["black_player"] = hash["black_user.id"];
             $rev = doc == null? null: doc._rev;
-            $db.put({"sgf":data}, "game-" + gid, $rev, function (err, response) { if (err!=null){$log.info(gid);$log.info(err);}});
+            $db.put(data, "game-" + hash["id"], $rev, function (err, response) { if (err!=null){$log.info(gid);$log.info(err);}});
           });
     }
 
