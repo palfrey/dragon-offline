@@ -1,8 +1,3 @@
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
 angular.module('dragon-offline', ['ionic'])
 .config(['$httpProvider', function($httpProvider) {
   $httpProvider.defaults.withCredentials = true;
@@ -48,14 +43,31 @@ angular.module('dragon-offline', ['ionic'])
         }
         $log.info(hash);
         $rootScope.games.push({"white_player" : hash["white_user.id"], "black_player" : hash["black_user.id"], "display_class": hash["move_uid"] == $rootScope.uid ? "yours": "theirs" })
+        $db.get("game-" + hash["id"], (function(hash) {return function(err, doc) {
+          if (doc == null) {
+            getGame(hash["id"], hash["move_id"], null);
+          }
+          else {
+            $log.info(window.smartgame.parse(doc["sgf"]));
+          }
+        }})(hash));
       }
-      $log.info($rootScope.games)
       $rootScope.$digest();
+    }
+
+    function getGame(gid, move_id, doc) {
+      $http.get($rootScope.dragon + "sgf.php?gid=" + gid + "&quick_mode=1").
+        success(function(data, status, headers, config) {
+          $log.info(status);
+           data["move_id"] = move_id;
+            $rev = doc == null? null: doc._rev;
+            $db.put({"sgf":data}, "game-" + gid, $rev, function (err, response) { if (err!=null){$log.info(err);}});
+          });
     }
 
     $db = new PouchDB("games");
     $rootScope.db = $db;
-    $login = $db.get("running-games", function(err, doc) {
+    $db.get("running-games", function(err, doc) {
       if (doc == null) {
         getDoc(useDoc);
       }
