@@ -61,7 +61,7 @@ angular.module('dragon-offline', ['ionic'])
           $log.info(status);
            data["move_id"] = move_id;
             $rev = doc == null? null: doc._rev;
-            $db.put({"sgf":data}, "game-" + gid, $rev, function (err, response) { if (err!=null){$log.info(err);}});
+            $db.put({"sgf":data}, "game-" + gid, $rev, function (err, response) { if (err!=null){$log.info(gid);$log.info(err);}});
           });
     }
 
@@ -96,16 +96,22 @@ angular.module('dragon-offline', ['ionic'])
             $http.get(scope.dragon + "quick_do.php?obj=user&cmd=info&uid=" + attrs.uid + "&fields=name").
               success(function(data, status, headers, config) {
                 $log.info(data);
-                scope.username = data["name"];
-                scope.displayName = scope.username;
-                scope.$digest();
-                scope.db.put({"name":data["name"]}, "uid-" + attrs.uid, function (err, response) { $log.info(err); });
+                scope.$apply(function () {
+                  scope.username = data["name"];
+                  scope.displayName = scope.username;
+                });
+                scope.db.put({"name":data["name"]}, "uid-" + attrs.uid, function (err, response) {
+                  if (err!=null) {
+                    $log.info(data);
+                    $log.info(err);
+                  }});
               });
           }
           else {
-            scope.username = doc["name"];
-            scope.displayName = scope.username;
-            scope.$digest();
+            scope.$apply(function () {
+              scope.username = doc["name"];
+              scope.displayName = scope.username;
+            });
           }
         });
       }
