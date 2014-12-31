@@ -23,10 +23,10 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 ion-item.yours {
 	@extend .item;
-	background-color: $stable;
+	background-color: $balanced;
 }
 
 ion-item.theirs {
 	@extend .item;
-	background-color: $balanced;
+	background-color: $stable;
 }
