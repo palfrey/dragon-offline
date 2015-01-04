@@ -1,7 +1,7 @@
-<ion-view title="{{DisplayName}}">
-  <ion-nav-buttons side="left">
-    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-  </ion-nav-buttons>
+<ion-view view-title="{{DisplayName}}">
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-back-button class="button-clear"><i class="icon ion-chevron-left"></i> Back</ion-nav-back-button>
+    </ion-nav-bar>
   <ion-content class="has-header">
   	<table class="goban" cellspacing="0" cellpadding="0" border="0">
   	<tr ng-repeat="row in rows track by $index">
