@@ -7,11 +7,14 @@ var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
 var prettify = require('gulp-js-prettify');
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
 
 var paths = {
 	sass: ['./scss/**/*.scss'],
 	js: ['./www/js/*.js', '!**/*.bundle.js'],
-	gulpfile: ['./gulpfile.js']
+	gulpfile: ['./gulpfile.js'],
+	smartgame: ['./www/js/smartgame.js']
 };
 
 gulp.task('default', ['sass']);
@@ -32,8 +35,8 @@ gulp.task('sass', function(done) {
 
 gulp.task('watch', function() {
 	gulp.watch(paths.sass, ['sass']);
-	console.log(paths.js + paths.gulpfile)
 	gulp.watch((paths.js.concat(paths.gulpfile)), ['prettify']);
+	gulp.watch(paths.smartgame, ['browserify'])
 });
 
 gulp.task('install', ['git-check'], function() {
@@ -67,3 +70,10 @@ gulp.task('prettify', function() {
 		.pipe(prettify(opts))
 		.pipe(gulp.dest('.')) // edit in place 
 });
+
+gulp.task('browserify', function() {
+	return browserify(paths.smartgame)
+		.bundle()
+		.pipe(source('smartgame.bundle.js'))
+		.pipe(gulp.dest('./www/js/'));
+})
