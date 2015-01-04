@@ -1,4 +1,6 @@
-angular.module('dragon-offline', ['ionic', 'dragon-offline.gamecontroller']).config(function($httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+var module = angular.module('dragon-offline', ['ionic', 'dragon-offline.gamecontroller'])
+
+module.config(function($httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 	$ionicConfigProvider.views.maxCache(0);
 	$httpProvider.defaults.withCredentials = true;
 	$stateProvider.state('app', {
@@ -23,7 +25,9 @@ angular.module('dragon-offline', ['ionic', 'dragon-offline.gamecontroller']).con
 	});
 	// if none of the above states are matched, use this as the fallback
 	$urlRouterProvider.otherwise('/app/games');
-}).run(function($ionicPlatform, $http, $log, $rootScope) {
+})
+
+module.run(function($ionicPlatform, $http, $log, $rootScope) {
 	$ionicPlatform.ready(function() {
 		// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
 		// for form inputs)
@@ -113,7 +117,9 @@ angular.module('dragon-offline', ['ionic', 'dragon-offline.gamecontroller']).con
 			}
 		});
 	});
-}).directive('player', function($log, $http) {
+})
+
+module.directive('player', function($log, $http) {
 	return {
 		templateUrl: "player.html",
 		scope: true,
