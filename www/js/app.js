@@ -1,4 +1,4 @@
-var module = angular.module('dragon-offline', ['ionic', 'dragon-offline.gamecontroller'])
+var module = angular.module('dragon-offline', ['ionic', 'dragon-offline.gamecontroller', 'endpoint'])
 
 module.config(function($httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 	$ionicConfigProvider.views.maxCache(0);
@@ -27,7 +27,7 @@ module.config(function($httpProvider, $stateProvider, $urlRouterProvider, $ionic
 	$urlRouterProvider.otherwise('/app/games');
 })
 
-module.run(function($ionicPlatform, $http, $log, $rootScope) {
+module.run(function($ionicPlatform, $http, $log, $rootScope, ApiEndpoint) {
 	$ionicPlatform.ready(function() {
 		// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
 		// for form inputs)
@@ -37,7 +37,7 @@ module.run(function($ionicPlatform, $http, $log, $rootScope) {
 		if (window.StatusBar) {
 			StatusBar.styleDefault();
 		}
-		$rootScope.dragon = "http://www.dragongoserver.net/";
+		$rootScope.dragon = ApiEndpoint.url;
 		$rootScope.uid = "8095";
 
 		function getDoc(onDone, doc) {

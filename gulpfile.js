@@ -9,6 +9,7 @@ var sh = require('shelljs');
 var prettify = require('gulp-js-prettify');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
+var replace = require('replace');
 
 var paths = {
 	sass: ['./scss/**/*.scss'],
@@ -68,7 +69,7 @@ gulp.task('prettify', function() {
 		.pipe(gulp.dest('./www/js')) // edit in place
 	gulp.src('gulpfile.js')
 		.pipe(prettify(opts))
-		.pipe(gulp.dest('.')) // edit in place 
+		.pipe(gulp.dest('.')) // edit in place
 });
 
 gulp.task('browserify', function() {
@@ -76,4 +77,26 @@ gulp.task('browserify', function() {
 		.bundle()
 		.pipe(source('smartgame.bundle.js'))
 		.pipe(gulp.dest('./www/js/'));
+})
+
+var replaceFiles = ['./www/js/endpoint.js'];
+
+gulp.task('add-proxy', function() {
+  return replace({
+    regex: "http://www.dragongoserver.net/",
+    replacement: "http://localhost:8100/api/",
+    paths: replaceFiles,
+    recursive: false,
+    silent: false,
+  });
+})
+
+gulp.task('remove-proxy', function() {
+  return replace({
+    regex: "http://localhost:8100/api/",
+    replacement: "http://www.dragongoserver.net/",
+    paths: replaceFiles,
+    recursive: false,
+    silent: false,
+  });
 })
